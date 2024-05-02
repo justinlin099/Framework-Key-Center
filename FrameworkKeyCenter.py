@@ -12,6 +12,8 @@ SCREEN_ROTATION_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\Scree
 COPILOT_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\copilot\copilot.exe" 
 TASK_MANAGER_LOCATION = "C:\Windows\System32\Taskmgr.exe"
 RICK_ROLL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\\NGGYU\\NGGYU.exe"
+CLIPBOARD_CONTROL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\CopyandPaste\CopyandPaste.exe"
+VERSION='Version: 1.0.1'
 
 def donate():
     # Open the browser to the donate page
@@ -47,6 +49,8 @@ def apply():
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, TASK_MANAGER_LOCATION)
             elif(dropDown.current() == 3):
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, RICK_ROLL_LOCATION)
+            elif(dropDown.current() == 4):
+                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, CLIPBOARD_CONTROL_LOCATION)
             winreg.CloseKey(key)
         except FileNotFoundError:
             key = winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\AppKey\\16')
@@ -59,6 +63,8 @@ def apply():
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, TASK_MANAGER_LOCATION)
             elif(dropDown.current() == 3):
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, RICK_ROLL_LOCATION)
+            elif(dropDown.current() == 4): 
+                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, CLIPBOARD_CONTROL_LOCATION)
             winreg.CloseKey(key)
     else:
         print('Switch is off')
@@ -104,6 +110,7 @@ def initiate():
         key = winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, 'Software\\FrameworkKeyCenter')
         winreg.SetValueEx(key, 'Switch', 0, winreg.REG_DWORD, 0)
         winreg.SetValueEx(key, 'Action', 0, winreg.REG_DWORD, 0)
+        winreg.SetValueEx(key, 'ClipboardMode', 0, winreg.REG_DWORD, 0)
         winreg.CloseKey(key)
         switch.state(['!selected'])
         dropDown.configure(state='disabled')
@@ -169,7 +176,7 @@ dropDownFrame.pack(side='top', fill='both',expand=True, padx=10, pady=10)
 dropDownLabel = ttk.Label(dropDownFrame, text='Select an action', font=('Segoe UI', 10))
 dropDownLabel.pack(side='left', padx=10)
 
-dropDown = ttk.Combobox(dropDownFrame, values=['Screen Rotation', 'Copilot Key', 'TaskManager', 'RickRoll'], state='readonly')
+dropDown = ttk.Combobox(dropDownFrame, values=['Screen Rotation', 'Copilot Key', 'TaskManager', 'RickRoll', 'Copy and Paste (Clipboard Control)'], state='readonly')
 dropDown.pack(side='right', fill='x', expand=True, padx=10)
 dropDown.current(0)
 
@@ -178,7 +185,7 @@ dropDown.current(0)
 bottomLabelFrame = ttk.Frame(innerFrame)
 bottomLabelFrame.pack(side='bottom', fill='x', padx=10, pady=10)
 
-versionLabel = ttk.Label(bottomLabelFrame, text='Version: 1.0.0', font=('Segoe UI', 10))
+versionLabel = ttk.Label(bottomLabelFrame, text=VERSION, font=('Segoe UI', 10))
 versionLabel.pack(side='left')
 
 authorLabel = ttk.Label(bottomLabelFrame, text='Made by JustinLin099 with ❤️', font=('Segoe UI Emoji', 10))

@@ -19,7 +19,7 @@
 
 Name "Framework Key Center"
 
-OutFile "FrameworkKeyCenterInstaller.exe"
+OutFile "FrameworkKeyCenterInstaller-v1.0.1.exe"
 
 ; Request application privileges for Windows Vista and higher
 RequestExecutionLevel admin
@@ -38,10 +38,12 @@ InstallDir $PROGRAMFILES64\FrameworkKeyCenter
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
-!insertmacro MUI_LANGUAGE "English"
+
 
 UninstPage uninstConfirm
 UninstPage instfiles
+
+!insertmacro MUI_LANGUAGE "English"
 
 Section "Framework Key Center (required)"
 
@@ -67,6 +69,10 @@ Section "Framework Key Center (required)"
 
   
   File /r "dist\ScreenRotate"
+
+  File /r "dist\CopyandPaste"
+
+  AccessControl::GrantOnFile "$INSTDIR\components" "(BU)" "FullAccess"
 
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\FrameworkKeyCenter "Install_Dir" "$INSTDIR"
