@@ -19,7 +19,7 @@
 
 Name "Framework Key Center"
 
-OutFile "FrameworkKeyCenterInstaller-v1.0.1.exe"
+OutFile "FrameworkKeyCenterInstaller-v1.0.2.exe"
 
 ; Request application privileges for Windows Vista and higher
 RequestExecutionLevel admin

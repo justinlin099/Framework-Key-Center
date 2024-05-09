@@ -7,17 +7,22 @@ from tkinter import PhotoImage
 from ctypes import windll
 import webbrowser
 import winreg
+from tkinter import filedialog
 
 SCREEN_ROTATION_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\ScreenRotate\ScreenRotate.exe"  
 COPILOT_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\copilot\copilot.exe" 
 TASK_MANAGER_LOCATION = "C:\Windows\System32\Taskmgr.exe"
 RICK_ROLL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\\NGGYU\\NGGYU.exe"
 CLIPBOARD_CONTROL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\CopyandPaste\CopyandPaste.exe"
-VERSION='Version: 1.0.1'
+VERSION='Version: 1.0.2'
 
 def donate():
     # Open the browser to the donate page
     webbrowser.open('https://www.buymeacoffee.com/5b32VpsEp5')
+    
+def webTest():
+    # Open the browser to the custom link
+    webbrowser.open(customWeblinkEntry.get())
     
 def save():
     # Save the settings
@@ -34,6 +39,8 @@ def apply():
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 'Software\\FrameworkKeyCenter', 0, winreg.KEY_WRITE)
         winreg.SetValueEx(key, 'Switch', 0, winreg.REG_DWORD, 1)
         winreg.SetValueEx(key, 'Action', 0, winreg.REG_DWORD, dropDown.current())
+        winreg.SetValueEx(key, 'CustomLink', 0, winreg.REG_SZ, customLinkEntry.get())
+        winreg.SetValueEx(key, 'CustomWeblink', 0, winreg.REG_SZ, customWeblinkEntry.get())
         key.Close()
         #HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AppKey\16
         #CHECK IF THE KEY EXISTS
@@ -51,6 +58,11 @@ def apply():
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, RICK_ROLL_LOCATION)
             elif(dropDown.current() == 4):
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, CLIPBOARD_CONTROL_LOCATION)
+            elif(dropDown.current() == 5):
+                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, customLinkEntry.get())
+            elif(dropDown.current() == 6):
+                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, customWeblinkEntry.get())
+            
             winreg.CloseKey(key)
         except FileNotFoundError:
             key = winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\AppKey\\16')
@@ -65,6 +77,10 @@ def apply():
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, RICK_ROLL_LOCATION)
             elif(dropDown.current() == 4): 
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, CLIPBOARD_CONTROL_LOCATION)
+            elif(dropDown.current() == 5):
+                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, customLinkEntry.get())
+            elif(dropDown.current() == 6):
+                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, customWeblinkEntry.get())
             winreg.CloseKey(key)
     else:
         print('Switch is off')
@@ -97,6 +113,13 @@ def initiate():
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 'Software\\FrameworkKeyCenter', 0, winreg.KEY_READ)
         switchState = winreg.QueryValueEx(key, 'Switch')
         action = winreg.QueryValueEx(key, 'Action')
+        #restoreEntry
+        customLinkEntry.configure(state='normal')
+        customLinkEntry.delete(0, 'end')
+        customLinkEntry.insert(0, winreg.QueryValueEx(key, 'CustomLink')[0])
+        customLinkEntry.configure(state='readonly')
+        customWeblinkEntry.delete(0, 'end')
+        customWeblinkEntry.insert(0, winreg.QueryValueEx(key, 'CustomWeblink')[0])
         winreg.CloseKey(key)
         if(switchState[0] == 1):
             switch.state(['selected'])
@@ -110,6 +133,8 @@ def initiate():
         key = winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, 'Software\\FrameworkKeyCenter')
         winreg.SetValueEx(key, 'Switch', 0, winreg.REG_DWORD, 0)
         winreg.SetValueEx(key, 'Action', 0, winreg.REG_DWORD, 0)
+        winreg.SetValueEx(key, 'CustomLink', 0, winreg.REG_SZ, '')
+        winreg.SetValueEx(key, 'CustomWeblink', 0, winreg.REG_SZ, '')
         winreg.SetValueEx(key, 'ClipboardMode', 0, winreg.REG_DWORD, 0)
         winreg.CloseKey(key)
         switch.state(['!selected'])
@@ -119,7 +144,31 @@ def initiate():
         dropDown.configure(state='readonly')
     else:
         dropDown.configure(state='disabled')
+        
+    selectDropDown(None)
     print('Settings initiated')
+    
+def selectDropDown(event):
+    # Select the dropdown
+    if dropDown.current() == 5:
+        #display the custom link frame
+        customLinkFrame.pack(side='top', fill='x', expand=True, padx=10, pady=10)
+        customWeblinkFrame.pack_forget()
+    elif dropDown.current() == 6:
+        customWeblinkFrame.pack(side='top', fill='x', expand=True, padx=10, pady=10)
+        customLinkFrame.pack_forget()
+    else:
+        customLinkFrame.pack_forget()
+        customWeblinkFrame.pack_forget()
+    
+def browseFile():
+    # open the file dialog to select the application
+    file_path = filedialog.askopenfilename(parent=root, title='Select an application or files', filetypes=[('Applications', '*.exe'), ('All files', '*.*')])
+    if file_path:
+        customLinkEntry.configure(state='normal')
+        customLinkEntry.delete(0, 'end')
+        customLinkEntry.insert(0, file_path)
+        customLinkEntry.configure(state='readonly')
 
 
 windll.shcore.SetProcessDpiAwareness(1)
@@ -128,7 +177,7 @@ root = tk.Tk()
 
 
 root.title('Framework Key Center')
-root.geometry('800x500')
+root.geometry('800x550')
 root.resizable(False, False)
 
 
@@ -171,14 +220,38 @@ switch = ttk.Checkbutton(switchFrame, style='Switch.TCheckbutton', command=toggl
 switch.pack(side='right')
 
 dropDownFrame = ttk.Frame(innerFrame)
-dropDownFrame.pack(side='top', fill='both',expand=True, padx=10, pady=10)
+dropDownFrame.pack(side='top', fill='x',expand=True, padx=10, pady=10)
 
 dropDownLabel = ttk.Label(dropDownFrame, text='Select an action', font=('Segoe UI', 10))
 dropDownLabel.pack(side='left', padx=10)
 
-dropDown = ttk.Combobox(dropDownFrame, values=['Screen Rotation', 'Copilot Key', 'TaskManager', 'RickRoll', 'Copy and Paste (Clipboard Control)'], state='readonly')
+dropDown = ttk.Combobox(dropDownFrame, values=['Screen Rotation', 'Copilot Key', 'TaskManager', 'RickRoll', 'Copy and Paste (Clipboard Control)', 'Custom Application', 'Custom Link'], state='readonly')
 dropDown.pack(side='right', fill='x', expand=True, padx=10)
 dropDown.current(0)
+dropDown.bind('<<ComboboxSelected>>', selectDropDown)
+
+customLinkFrame = ttk.Frame(innerFrame)
+customLinkFrame.pack(side='top', fill='x', expand=True, padx=10, pady=10)
+customLinkFrame.pack_forget()
+
+# customLinkLabel = ttk.Label(customLinkFrame, text='Custom link/application', font=('Segoe UI', 10))
+# customLinkLabel.pack(side='left', padx=10)
+
+customLinkEntry = ttk.Entry(customLinkFrame, state='readonly')
+customLinkEntry.pack(side='left', fill='x', expand=True, padx=10)
+
+customLinkBrowseButton = ttk.Button(customLinkFrame, text='Browse', command=browseFile)
+customLinkBrowseButton.pack(side='right', padx=10)
+
+customWeblinkFrame = ttk.Frame(innerFrame)
+customWeblinkFrame.pack(side='top', fill='x', expand=True, padx=10, pady=10)
+customWeblinkFrame.pack_forget()
+
+customWeblinkEntry = ttk.Entry(customWeblinkFrame)
+customWeblinkEntry.pack(side='left', fill='x', expand=True, padx=10)
+
+customWeblinkTestButton = ttk.Button(customWeblinkFrame, text='Test', command=webTest)
+customWeblinkTestButton.pack(side='right', padx=10)
 
 
 

@@ -152,3 +152,4 @@ cython_debug/
 #.idea/
 FrameworkKeyCenterInstaller.exe
 FrameworkKeyCenterInstaller-v1.0.1.exe
+*.exe

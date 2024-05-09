@@ -29,10 +29,10 @@ current_window = win32gui.GetForegroundWindow()
 def check_caps_lock():
     if(state == 'True'):
         label.config(image=copy)
-        label.config(text="  Copy")
+        label.config(text="  Copied")
     else:
         label.config(image=paste)
-        label.config(text="  Paste")
+        label.config(text="  Pasted")
 
     # 將焦點返回到當前前景窗口
     win32gui.SetForegroundWindow(current_window)
