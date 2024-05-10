@@ -40,11 +40,15 @@ def check_caps_lock():
 def close_window():
     root.destroy()
     
+def opaque_window():
+    root.attributes('-alpha',1)
+    
 windll.shcore.SetProcessDpiAwareness(1)
 
 root = tk.Tk()
 root.overrideredirect(True)
 root.attributes("-topmost", True)
+root.attributes('-alpha',0)
 
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
@@ -76,11 +80,12 @@ sv_ttk.set_theme('dark')
 # 將焦點返回到原始的前景窗口
 root.after(10, lambda: win32gui.SetForegroundWindow(current_window))
 
+root.after(100, opaque_window)
+
 # 一秒後關閉視窗
 root.after(1000, close_window)
 
-
-
 root.mainloop()
+
 
 
