@@ -58,9 +58,9 @@ root.geometry(geomeryStr)
 # labelFrame = ttk.Frame(root)
 # labelFrame.pack(expand=True, fill='both', padx=20, pady=10)
 paste = tk.PhotoImage(data=imageres.paste)
-paste = paste.subsample(15)
+
 copy = tk.PhotoImage(data=imageres.copy)
-copy = copy.subsample(15)
+
 # imageLabel = ttk.Label(labelFrame, image=copy)
 # imageLabel.pack(side='left', padx=10,expand=True, fill='both')
 # label = ttk.Label(labelFrame, text="", font=('Segoe UI', 12))

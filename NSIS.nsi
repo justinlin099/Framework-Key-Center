@@ -19,7 +19,7 @@
 
 Name "Framework Key Center"
 
-OutFile "FrameworkKeyCenterInstaller-v1.0.2.exe"
+OutFile "FrameworkKeyCenterInstaller-v1.0.3.exe"
 
 ; Request application privileges for Windows Vista and higher
 RequestExecutionLevel admin
@@ -71,6 +71,8 @@ Section "Framework Key Center (required)"
   File /r "dist\ScreenRotate"
 
   File /r "dist\CopyandPaste"
+
+  File /r "dist\TouchpadToggle"
 
   AccessControl::GrantOnFile "$INSTDIR\components" "(BU)" "FullAccess"
 

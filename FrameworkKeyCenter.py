@@ -14,7 +14,8 @@ COPILOT_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\copilot\copil
 TASK_MANAGER_LOCATION = "C:\Windows\System32\Taskmgr.exe"
 RICK_ROLL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\\NGGYU\\NGGYU.exe"
 CLIPBOARD_CONTROL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\CopyandPaste\CopyandPaste.exe"
-VERSION='Version: 1.0.2'
+TRACKPAD_CONTROL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\TouchPadToggle\TouchPadToggle.exe"
+VERSION='Version: 1.0.3'
 
 def donate():
     # Open the browser to the donate page
@@ -58,10 +59,12 @@ def apply():
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, RICK_ROLL_LOCATION)
             elif(dropDown.current() == 4):
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, CLIPBOARD_CONTROL_LOCATION)
-            elif(dropDown.current() == 5):
-                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, customLinkEntry.get())
             elif(dropDown.current() == 6):
+                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, customLinkEntry.get())
+            elif(dropDown.current() == 7):
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, customWeblinkEntry.get())
+            elif(dropDown.current() == 5):
+                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, TRACKPAD_CONTROL_LOCATION)
             
             winreg.CloseKey(key)
         except FileNotFoundError:
@@ -77,10 +80,12 @@ def apply():
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, RICK_ROLL_LOCATION)
             elif(dropDown.current() == 4): 
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, CLIPBOARD_CONTROL_LOCATION)
-            elif(dropDown.current() == 5):
-                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, customLinkEntry.get())
             elif(dropDown.current() == 6):
+                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, customLinkEntry.get())
+            elif(dropDown.current() == 7):
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, customWeblinkEntry.get())
+            elif(dropDown.current() == 5):
+                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, TRACKPAD_CONTROL_LOCATION)
             winreg.CloseKey(key)
     else:
         print('Switch is off')
@@ -150,11 +155,11 @@ def initiate():
     
 def selectDropDown(event):
     # Select the dropdown
-    if dropDown.current() == 5:
+    if dropDown.current() == 6:
         #display the custom link frame
         customLinkFrame.pack(side='top', fill='x', expand=True, padx=10, pady=10)
         customWeblinkFrame.pack_forget()
-    elif dropDown.current() == 6:
+    elif dropDown.current() == 7:
         customWeblinkFrame.pack(side='top', fill='x', expand=True, padx=10, pady=10)
         customLinkFrame.pack_forget()
     else:
@@ -169,6 +174,9 @@ def browseFile():
         customLinkEntry.delete(0, 'end')
         customLinkEntry.insert(0, file_path)
         customLinkEntry.configure(state='readonly')
+        
+def opaque_window():
+    root.attributes('-alpha',1)
 
 
 windll.shcore.SetProcessDpiAwareness(1)
@@ -179,6 +187,8 @@ root = tk.Tk()
 root.title('Framework Key Center')
 root.geometry('800x550')
 root.resizable(False, False)
+root.attributes('-alpha',0)
+
 
 
 
@@ -225,7 +235,7 @@ dropDownFrame.pack(side='top', fill='x',expand=True, padx=10, pady=10)
 dropDownLabel = ttk.Label(dropDownFrame, text='Select an action', font=('Segoe UI', 10))
 dropDownLabel.pack(side='left', padx=10)
 
-dropDown = ttk.Combobox(dropDownFrame, values=['Screen Rotation', 'Copilot Key', 'TaskManager', 'RickRoll', 'Copy and Paste (Clipboard Control)', 'Custom Application', 'Custom Link'], state='readonly')
+dropDown = ttk.Combobox(dropDownFrame, values=['Screen Rotation', 'Copilot Key', 'TaskManager', 'RickRoll', 'Copy and Paste (Clipboard Control)', 'Enable/Disable TrackPad', 'Custom Application', 'Custom Link'], state='readonly')
 dropDown.pack(side='right', fill='x', expand=True, padx=10)
 dropDown.current(0)
 dropDown.bind('<<ComboboxSelected>>', selectDropDown)
@@ -279,7 +289,7 @@ cancelButton.pack(side='right')
 donateButton = ttk.Button(bottomButtonFrame, text='Donate', command=donate)
 donateButton.pack(side='left')
 
-
+root.after(1500, opaque_window)
 
 sv_ttk.set_theme('dark')
 
