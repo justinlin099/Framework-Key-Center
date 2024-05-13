@@ -22,6 +22,9 @@ from tkinter import ttk
 import sv_ttk
 from ctypes import windll
 import imageres
+import time
+
+current_opaque = 0
 
 # 取得當前前景窗口的 handle
 current_window = win32gui.GetForegroundWindow()
@@ -41,7 +44,22 @@ def close_window():
     root.destroy()
     
 def opaque_window():
-    root.attributes('-alpha',1)
+    global current_opaque
+    current_opaque += 0.1
+    root.attributes('-alpha',current_opaque)
+    if current_opaque <1:
+        time.sleep(0.01)
+        opaque_window()
+        
+def deopaque_window():
+    global current_opaque
+    current_opaque -= 0.1
+    root.attributes('-alpha',current_opaque)
+    if current_opaque >0:
+        time.sleep(0.01)
+        deopaque_window()
+    else:
+        close_window()
     
 windll.shcore.SetProcessDpiAwareness(1)
 
@@ -83,9 +101,12 @@ root.after(10, lambda: win32gui.SetForegroundWindow(current_window))
 root.after(100, opaque_window)
 
 # 一秒後關閉視窗
-root.after(1000, close_window)
+root.after(1200, deopaque_window)
 
 root.mainloop()
+
+
+
 
 
 

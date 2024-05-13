@@ -8,6 +8,7 @@ from ctypes import windll
 import webbrowser
 import winreg
 from tkinter import filedialog
+import time
 
 SCREEN_ROTATION_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\ScreenRotate\ScreenRotate.exe"  
 COPILOT_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\copilot\copilot.exe" 
@@ -15,7 +16,9 @@ TASK_MANAGER_LOCATION = "C:\Windows\System32\Taskmgr.exe"
 RICK_ROLL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\\NGGYU\\NGGYU.exe"
 CLIPBOARD_CONTROL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\CopyandPaste\CopyandPaste.exe"
 TRACKPAD_CONTROL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\TouchPadToggle\TouchPadToggle.exe"
-VERSION='Version: 1.0.3'
+VERSION='Version: 1.0.4'
+
+current_opaque = 0
 
 def donate():
     # Open the browser to the donate page
@@ -176,7 +179,12 @@ def browseFile():
         customLinkEntry.configure(state='readonly')
         
 def opaque_window():
-    root.attributes('-alpha',1)
+    global current_opaque
+    current_opaque += 0.05
+    root.attributes('-alpha',current_opaque)
+    if current_opaque <1:
+        time.sleep(0.01)
+        opaque_window()
 
 
 windll.shcore.SetProcessDpiAwareness(1)
