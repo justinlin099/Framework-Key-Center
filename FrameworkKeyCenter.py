@@ -16,7 +16,8 @@ TASK_MANAGER_LOCATION = "C:\Windows\System32\Taskmgr.exe"
 RICK_ROLL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\\NGGYU\\NGGYU.exe"
 CLIPBOARD_CONTROL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\CopyandPaste\CopyandPaste.exe"
 TRACKPAD_CONTROL_LOCATION = "C:\Program Files\FrameworkKeyCenter\components\TouchPadToggle\TouchPadToggle.exe"
-VERSION='Version: 1.0.4'
+FRAMEWORK_KEY_SERVICE = "C:\Program Files\FrameworkKeyCenter\components\FrameworkKeyService\FrameworkKeyService.exe"
+VERSION='Version: 1.0.5'
 
 current_opaque = 0
 
@@ -68,6 +69,8 @@ def apply():
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, customWeblinkEntry.get())
             elif(dropDown.current() == 5):
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, TRACKPAD_CONTROL_LOCATION)
+            elif(dropDown.current() == 8):
+                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, FRAMEWORK_KEY_SERVICE)
             
             winreg.CloseKey(key)
         except FileNotFoundError:
@@ -89,6 +92,8 @@ def apply():
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, customWeblinkEntry.get())
             elif(dropDown.current() == 5):
                 winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, TRACKPAD_CONTROL_LOCATION)
+            elif(dropDown.current() == 8):
+                winreg.SetValueEx(key, 'ShellExecute', 0, winreg.REG_SZ, FRAMEWORK_KEY_SERVICE)
             winreg.CloseKey(key)
     else:
         print('Switch is off')
@@ -243,7 +248,7 @@ dropDownFrame.pack(side='top', fill='x',expand=True, padx=10, pady=10)
 dropDownLabel = ttk.Label(dropDownFrame, text='Select an action', font=('Segoe UI', 10))
 dropDownLabel.pack(side='left', padx=10)
 
-dropDown = ttk.Combobox(dropDownFrame, values=['Screen Rotation', 'Copilot Key', 'TaskManager', 'RickRoll', 'Copy and Paste (Clipboard Control)', 'Enable/Disable TrackPad', 'Custom Application', 'Custom Link'], state='readonly')
+dropDown = ttk.Combobox(dropDownFrame, values=['Screen Rotation', 'Copilot Key', 'TaskManager', 'RickRoll', 'Copy and Paste (Clipboard Control)', 'Enable/Disable TrackPad', 'Custom Application', 'Custom Link', 'Middle Mouse Button'], state='readonly')
 dropDown.pack(side='right', fill='x', expand=True, padx=10)
 dropDown.current(0)
 dropDown.bind('<<ComboboxSelected>>', selectDropDown)
